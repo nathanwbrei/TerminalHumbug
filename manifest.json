@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+
+  "name": "TerminalHumbug",
+  "description": "Scrapes Humbug messages and sends them over a socket",
+  "version": "0.0.0.1",
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://humbughq.com/"],
+      "js": ["jquery-1.9.1.min.js","scraper.js"]
+    }
+  ],
+  "permissions": [
+    "http://localhost:5000/*"
+  ]
+}
