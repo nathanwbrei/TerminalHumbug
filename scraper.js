@@ -13,19 +13,22 @@ function scrape() {
 		};})
 
 	data = jQuery.makeArray(data_jq);
-	delta = data.slice(scrape.old_length, data.length);
-	scrape.old_length = data.length;
-	
-	var s = JSON.stringify(delta);
-	console.log("Scraper.js: "+ delta.length+" new objects." );
 
-	// Send contentscript to extension page
-	// http://developer.chrome.com/extensions/messaging.html
-	chrome.extension.sendMessage({data: s}, function(response) {
-		//console.log(response.farewell);
-	});
+	// If we found some new DOM nodes
+	if (scrape.old_length < data.length) {
+
+		// Slice them free
+		delta = data.slice(scrape.old_length, data.length);
+		scrape.old_length = data.length;
+
+		var s = JSON.stringify(delta);
+		console.log("Scraper.js: "+ delta.length+" new objects." );
+
+		// Send delta to background.js, which isn't origin-sandboxed
+		// http://developer.chrome.com/extensions/messaging.html
+		chrome.extension.sendMessage({data: s});
+	}
 }
 
 scrape.old_length = 0;
-setInterval(scrape,500);
-
+setInterval(scrape,1000);
